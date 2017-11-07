@@ -7,3 +7,7 @@ The application is ready to be run locally by executing the `config/up.sh` scrip
 * Silex application: backed and endorsed by Symfony and its components, nothing else to say.
 * Service and routing registrars: register services (and controllers) and routes easily
 * Packed with Bootstrap and jQuery: included from CDNs in the Twig layout
+# How to use it
+* Clone this repository with `git clone`. You can clone into a a directory with a different name running `git clone https://github.com/gbmcarlos/docker-silex-skeleton.git {project-name}`
+* Remove the old remote and add the new one running `git remote rm origin && git remote add origin https://github.com/{you}/{project-name}.git`
+* Start working
