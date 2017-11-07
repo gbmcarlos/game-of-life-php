@@ -1,6 +1,5 @@
 ## What's this?
 This skeleton allows to have a working Silex application running inside a docker container completely out of the box.
-The application is ready to be run locally by executing the `config/up.sh` script.
 ## Features
 * Run as a Docker container: 
 * Run as a Docker container: only one dependency, Docker. It can be deployed in any decent modern server. It can be deployed in a matter of 2-4 minutes
