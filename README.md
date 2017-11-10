@@ -1,18 +1,37 @@
-## What's this?
-This skeleton allows to have a working Silex application running inside a docker container completely out of the box.
-## Features
-* Run as a Docker container: 
-* Run as a Docker container: only one dependency, Docker. It can be deployed in any decent modern server. It can be deployed in a matter of 2-4 minutes
-* Apache with configurable ports: Both the external and the internal ports are configurable as environment variables. This allows to run the container as a non-root user (as some third-party Docker build services do), so Apache can bind ports other than 80 and 443
-* Silex application: backed and endorsed by Symfony and its components, nothing else to say.
-* Service and routing registrars: register services (and controllers) and routes easily
-* Packed with Bootstrap and jQuery: included from CDNs in the Twig layout
-* `up.sh` included: get the application running in your local with the command `./deploy/up.sh 80 8000`
-## How to use it
-* Clone this repository with `git clone`. You can clone into a a directory with a different name by running `git clone https://github.com/gbmcarlos/docker-silex-skeleton.git {project-name}`
-* Remove the old remote and add the new one by running `git remote rm origin && git remote add origin https://github.com/{you}/{project-name}.git`
-* Start working
-#### If you don't want your project to contain the commits in this repository
-* Remove the git information after cloning by running `rm -rf .git` (you may need certain permissions)
-* Create a new git repository by running `git init`
-* Add your remote normally, by running `git remote add origin https://github.com/{you}/{project-name}.git`
+# Game Of Life Coding Test (PHP version)
+## Assignment
+This test is designed to assess a candidate's general level of PHP/JS coding ability without reference to any particular framework. It is intended to be a test of style as well as ability. You will implement a cellular automaton as per the rules of Conway's Game of Life, that can be found at http://en.wikipedia.org/wiki/Conway%27s_Game_of_Life.
+ 
+The program will be able to be deployed onto a web server as a set of PHP/JS scripts that will output animated preview to the calling browser. The program will be delivered as a .tar.gz archive. You may include a 3rd party framework if you wish (this might help with providing unit tests)
+ 
+A user will visit an index.php that will give them the choice of having either a random initial condition of the game grid, or a Gosper Glider Gun (info on this can be found at the above URL).  The user will be delivered a web page that includes an animated grid preview that shows at least the first 100 iterations of life based on a 38 x 38 starting grid. If you want you might extend functionalities further in example adding ability to save in database or local storage information about designed pattern/grid etc.
+ 
+You will use Object-Oriented programming style. Try not to implement procedural code dressed up as objects (although given the nature of this task there will be limits)
+ 
+Provide unit tests for extra marks. 
+ 
+You will be judged on your coding style, on the efficiency of your implementation and whether you provide unit tests.
+
+## Requirements
+* The game of life functionality will be implemented purely in PHP
+* The overall functionality of the website will be implemented in PHP.
+* The application will be implemented using Silex as a PHP framework, vanilla Javascript and Docker.
+
+### User journey
+
+#### Front page
+* In the frot page the user will see two buttons, "Random pattern", and "Gosper Glider Gun". 
+* Each of the button will redirect the user to a different page. 
+
+#### Random pattern page
+* This page will show a functional grid of 38x38 started with a random pattern.
+* The user will have three controls to stop, resume or restart the Game of Life
+* The user will se the generation number and the populaiton count in real time
+
+#### Gosper Glider Gun page
+* This page will show a functional grid of 38x38 started with a Gosper Glider Gun.
+* The user will have three controls to stop, resume or restart the Game of Life
+* The user will se the generation number and the populaiton count in real time
+
+#### Tests page
+* In this page the tests will run using QUnit
