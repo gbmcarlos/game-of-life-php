@@ -7,8 +7,11 @@ RUN    apt-get update \
         php5-curl \
         libapache2-mod-macro \
         git \
-        zip unzip \
+        libpng12-dev libjpeg-dev \
     && rm -rf /var/lib/apt/lists/*
+
+RUN docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr \
+	&& docker-php-ext-install gd zip
 
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | \
