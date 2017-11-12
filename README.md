@@ -14,24 +14,21 @@ You will be judged on your coding style, on the efficiency of your implementatio
 
 ## Requirements
 * The game of life functionality will be implemented purely in PHP
-* The overall functionality of the website will be implemented in PHP.
-* The application will be implemented using Silex as a PHP framework, vanilla Javascript and Docker.
+* The application will be implemented using Silex as a PHP framework and Docker.
 
 ### User journey
 
 #### Front page
-* In the frot page the user will see two buttons, "Random pattern", and "Gosper Glider Gun". 
+* In the front page the user will see two buttons, "Random pattern", and "Gosper Glider Gun". 
 * Each of the button will redirect the user to a different page. 
 
 #### Random pattern page
 * This page will show a functional grid of 38x38 started with a random pattern.
-* The user will have three controls to stop, resume or restart the Game of Life
-* The user will se the generation number and the populaiton count in real time
+* The grid will show the 100 first iterations of the game
 
 #### Gosper Glider Gun page
 * This page will show a functional grid of 38x38 started with a Gosper Glider Gun.
-* The user will have three controls to stop, resume or restart the Game of Life
-* The user will se the generation number and the populaiton count in real time
+* The grid will show the 100 first iterations of the game
 
-#### Tests page
-* In this page the tests will run using QUnit
+### Tests
+Tests are implemented with PHPUnit and can be run by executing `./deploy/tests.sh`.
