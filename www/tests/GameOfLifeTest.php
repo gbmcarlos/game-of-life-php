@@ -100,6 +100,94 @@ class GameOfLifeTest extends PopulationTestCase {
 
     }
 
+    public function testNextGeneration() {
+
+        $this->assertPopulationEquals(
+            [], $this->game->getNextGeneration(
+            []
+        )
+        );
+
+        $this->assertPopulationEquals(
+            [0], $this->game->getNextGeneration(
+            [0]
+        )
+        );
+
+        $this->assertPopulationEquals(
+            [1], $this->game->getNextGeneration(
+            [0]
+        )
+        );
+
+        $this->assertPopulationEquals(
+            [
+                [0, 0],
+                [0, 0]
+            ], $this->game->getNextGeneration(
+            [
+                [0, 0],
+                [0, 0]
+            ]
+        )
+        );
+
+        $this->assertPopulationEquals(
+            [
+                [1, 1],
+                [0, 0]
+            ], $this->game->getNextGeneration(
+            [
+                [0, 0],
+                [1, 1]
+            ]
+        )
+        );
+
+        $this->assertPopulationEquals(
+            [
+                [0, 1, 0],
+                [0, 1, 0],
+                [0, 1, 0]
+            ], $this->game->getNextGeneration(
+            [
+                [0, 0, 0],
+                [1, 1, 1],
+                [0, 0, 0]
+            ]
+        )
+        );
+
+        $this->assertPopulationEquals(
+            [
+                [1, 1, 0],
+                [1, 1, 0],
+                [0, 0, 0]
+            ], $this->game->getNextGeneration(
+            [
+                [1, 1, 0],
+                [1, 1, 0],
+                [0, 0, 0]
+            ]
+        )
+        );
+
+        $this->assertPopulationEquals(
+            [
+                [1, 1, 0],
+                [1, 0, 0],
+                [0, 0, 0]
+            ], $this->game->getNextGeneration(
+            [
+                [1, 1, 0],
+                [1, 1, 0],
+                [0, 0, 0]
+            ]
+        )
+        );
+
+    }
+
     public function tearDown() {
         unset($this->game);
     }
