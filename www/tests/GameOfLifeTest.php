@@ -1,6 +1,8 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
+namespace Tests;
+
+use Tests\PopulationAssertion\PopulationTestCase;
 use App\services\GameOfLife;
 
 /**
@@ -9,7 +11,7 @@ use App\services\GameOfLife;
  * Date: 11/12/17
  * Time: 12:33 PM
  */
-class GameOfLifeTest extends TestCase {
+class GameOfLifeTest extends PopulationTestCase {
 
     protected $game;
 
