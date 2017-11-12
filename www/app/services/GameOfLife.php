@@ -21,7 +21,13 @@ class GameOfLife implements GameOfLifeInterface {
     }
 
     public function getCellNextGeneration($cell = false, $neighbours = 0) : bool {
-        return false;
+
+        if ($cell) {
+            return $neighbours == 2 || $neighbours == 3;
+        } else {
+            return $neighbours == 3;
+        }
+
     }
 
 }
