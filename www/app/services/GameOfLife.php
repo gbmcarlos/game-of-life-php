@@ -16,7 +16,7 @@ class GameOfLife implements GameOfLifeInterface {
 
     }
 
-    public function countNeigbours($population = [], $i = 0, $j = 0) : int {
+    public function countNeighbours($population = [], $i = 0, $j = 0) : int {
 
     }
 
