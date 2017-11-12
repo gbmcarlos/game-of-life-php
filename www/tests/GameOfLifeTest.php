@@ -40,6 +40,64 @@ class GameOfLifeTest extends TestCase {
 
     }
 
+    public function testCountNeighbours() {
+
+        $this->assertEquals(0, $this->game->countNeighbours([
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0]
+        ]), 1, 1);
+
+        $this->assertEquals(1, $this->game->countNeighbours([
+            [1, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0]
+        ]), 1, 1);
+
+        $this->assertEquals(2, $this->game->countNeighbours([
+            [1, 1, 0],
+            [0, 0, 0],
+            [0, 0, 0]
+        ]), 1, 1);
+
+        $this->assertEquals(3, $this->game->countNeighbours([
+            [1, 1, 1],
+            [0, 0, 0],
+            [0, 0, 0]
+        ]), 1, 1);
+
+        $this->assertEquals(4, $this->game->countNeighbours([
+            [1, 1, 1],
+            [1, 0, 0],
+            [0, 0, 0]
+        ]), 1, 1);
+
+        $this->assertEquals(5, $this->game->countNeighbours([
+            [1, 1, 1],
+            [1, 0, 1],
+            [0, 0, 0]
+        ]), 1, 1);
+
+        $this->assertEquals(6, $this->game->countNeighbours([
+            [1, 1, 1],
+            [1, 0, 1],
+            [1, 0, 0]
+        ]), 1, 1);
+
+        $this->assertEquals(7, $this->game->countNeighbours([
+            [1, 1, 1],
+            [1, 0, 1],
+            [1, 1, 0]
+        ]), 1, 1);
+
+        $this->assertEquals(8, $this->game->countNeighbours([
+            [1, 1, 1],
+            [1, 0, 1],
+            [1, 1, 1]
+        ]), 1, 1);
+
+    }
+
     public function tearDown() {
         unset($this->game);
     }
