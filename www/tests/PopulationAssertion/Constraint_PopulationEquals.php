@@ -43,7 +43,7 @@ class Constraint_PopulationEquals extends Constraint {
     }
 
     public function toString() {
-        return 'populations are equal';
+        return 'population is equal to ' . json_encode($this->population);
     }
 
 }
