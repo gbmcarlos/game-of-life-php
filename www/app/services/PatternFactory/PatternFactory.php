@@ -71,11 +71,23 @@ class PatternFactory implements PatternFactoryInterface{
     }
 
     public function getRandomPattern($randomRatio = 0.5, $width = 0, $height = 0) : array {
-        // TODO: Implement getRandomPattern() method.
+
+        $result = [];
+
+        for ($i = 0; $i < $height; $i++) {
+            $result[$i] = [];
+            for ($j = 0; $j < $width; $j++) {
+                $result[$i][$j] = $this->getRandomCell($randomRatio);
+            }
+        }
+
+        return $result;
+
     }
 
-    public function getRandomCell($randomRatio) {
-
+    public function getRandomCell($randomRatio = 0.5) {
+        $random = rand(0, 1);
+        return $random <= $randomRatio;
     }
 
 }
