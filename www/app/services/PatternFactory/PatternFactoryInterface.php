@@ -11,7 +11,7 @@ namespace App\services\PatternFactory;
 
 interface PatternFactoryInterface {
 
-    public function getPattern($name) : array;
+    public function getPattern($name, $width, $height) : array;
 
     public function getRandomPattern($randomRatio = 0.5, $width = 0, $height = 0) : array;
 

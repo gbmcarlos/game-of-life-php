@@ -3,6 +3,9 @@
 namespace App\config;
 
 use App\controllers\FrontController;
+use App\services\GameDrawer\GameDrawer;
+use App\services\GameOfLife\GameOfLife;
+use App\services\PatternFactory\PatternFactory;
 use Silex\Application;
 use Silex\Provider\AssetServiceProvider;
 use Silex\Provider\RoutingServiceProvider;
@@ -28,11 +31,29 @@ class Services {
         // Front controller
         $app['FrontController'] = function() use ($app) {
             return new FrontController(
-                $app['twig']
+                $app['twig'],
+                $app['PatternFactory'],
+                $app['GameDrawer']
             );
         };
 
         // Services
+        $app['GameDrawer'] = function() use ($app) {
+            return new GameDrawer(
+                10,
+                10,
+                10,
+                $app['GameOfLife']);
+        };
+
+        $app['PatternFactory'] = function() use ($app) {
+            return new PatternFactory();
+        };
+
+        $app['GameOfLife'] = function() use ($app) {
+            return new GameOfLife();
+        };
+
         // Twig
         $app->register(new TwigServiceProvider(), array(
             'twig.path' => __DIR__.'/../templates',

@@ -14,7 +14,7 @@ class PatternFactory implements PatternFactoryInterface{
 
     protected $patternsDir = __DIR__ . '/../../resources/patterns/';
 
-    public function getPattern($name) : array {
+    public function getPattern($name, $width, $height) : array {
 
         try {
 
@@ -24,6 +24,39 @@ class PatternFactory implements PatternFactoryInterface{
 
         $fileContent = $this->readFile($name);
         $matrix = $this->parse($fileContent);
+
+        $matrix = $this->expandMatrix($matrix, $width, $height);
+
+        return $matrix;
+
+    }
+
+    public function expandMatrix($matrix, $width, $height) {
+
+        $currentWidth = count($matrix[0]);
+        $currentHeight = count($matrix);
+
+        $missingLines = $height - $currentHeight;
+        $missingCells = $width - $currentWidth;
+
+        if ($missingLines > 0) {
+
+            $newLines = [];
+            for ($i = 0; $i < $missingLines; $i++) {
+                $newLine = array_fill(0, $currentWidth, 0); // create a new line, with the current width
+                array_push($newLines, $newLine);
+            }
+            $matrix = array_merge($matrix, $newLines);
+        }
+
+        if ($missingCells > 0) {
+
+            for ($j = 0; $j < count($matrix); $j++) {
+                $newCells = array_fill(0, $missingCells, 0); // create the rest of line
+                $matrix[$j] = array_merge($matrix[$j], $newCells);
+            }
+
+        }
 
         return $matrix;
 
