@@ -1,6 +1,6 @@
-FROM php:7.0-apache
+FROM php:7.1-apache
 
-# Install Apache PHP mod and its dependencies (including Apache and PHP!), and git, zip and unzip in case composer needs it
+# Install system dependencies
 RUN    apt-get update \
     && apt-get -yq install \
         curl \
@@ -12,6 +12,18 @@ RUN    apt-get update \
 
 RUN docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr \
 	&& docker-php-ext-install gd zip
+
+# Install and configure XDebug
+RUN pecl install xdebug-2.5.5 && docker-php-ext-enable xdebug
+
+RUN echo 'xdebug.remote_port=9000' >> /usr/local/etc/php/conf.d/xdebug.ini
+RUN echo 'xdebug.remote_host=10.254.254.254' >> /usr/local/etc/php/conf.d/xdebug.ini
+RUN echo 'xdebug.remote_enable=on' >> /usr/local/etc/php/conf.d/xdebug.ini
+RUN echo 'xdebug.remote_autostart=on' >> /usr/local/etc/php/conf.d/xdebug.ini
+RUN echo 'xdebug.remote_connect_back=off' >> /usr/local/etc/php/conf.d/xdebug.ini
+RUN echo 'xdebug.remote_handler=dbgp' >> /usr/local/etc/php/conf.d/xdebug.ini
+RUN echo 'xdebug.profiler_enable=0' >> /usr/local/etc/php/conf.d/xdebug.ini
+RUN echo 'xdebug.profiler_output_dir="/var/www/html"' >> /usr/local/etc/php/conf.d/xdebug.ini
 
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | \
