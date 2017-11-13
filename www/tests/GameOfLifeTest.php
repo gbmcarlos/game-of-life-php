@@ -98,6 +98,24 @@ class GameOfLifeTest extends PopulationTestCase {
             [1, 1, 1]
         ], 1, 1));
 
+        $this->assertEquals(2, $this->game->countNeighbours([
+            [1, 1, 0],
+            [1, 0, 0],
+            [0, 0, 0]
+        ], 0, 0));
+
+        $this->assertEquals(4, $this->game->countNeighbours([
+            [1, 1, 0],
+            [1, 1, 1],
+            [0, 0, 0]
+        ], 0, 1));
+
+        $this->assertEquals(5, $this->game->countNeighbours([
+            [1, 1, 0],
+            [1, 1, 0],
+            [1, 1, 0]
+        ], 1, 0));
+
     }
 
     public function testNextGeneration() {
@@ -115,8 +133,8 @@ class GameOfLifeTest extends PopulationTestCase {
         );
 
         $this->assertPopulationEquals(
-            [1], $this->game->getNextGeneration(
-            [0]
+            [0], $this->game->getNextGeneration(
+            [1]
         )
         );
 
@@ -128,18 +146,6 @@ class GameOfLifeTest extends PopulationTestCase {
             [
                 [0, 0],
                 [0, 0]
-            ]
-        )
-        );
-
-        $this->assertPopulationEquals(
-            [
-                [1, 1],
-                [0, 0]
-            ], $this->game->getNextGeneration(
-            [
-                [0, 0],
-                [1, 1]
             ]
         )
         );
@@ -175,12 +181,12 @@ class GameOfLifeTest extends PopulationTestCase {
         $this->assertPopulationEquals(
             [
                 [1, 1, 0],
-                [1, 0, 0],
+                [1, 1, 0],
                 [0, 0, 0]
             ], $this->game->getNextGeneration(
             [
                 [1, 1, 0],
-                [1, 1, 0],
+                [1, 0, 0],
                 [0, 0, 0]
             ]
         )
