@@ -105,6 +105,20 @@ EOD
 
     }
 
+    public function testRandomPatternDimension() {
+
+        $this->assertPopulationDimensions(
+            3, 3,
+            $this->patternFactory->getRandomPattern(0.5, 3, 3)
+        );
+
+        $this->assertPopulationDimensions(
+            0, 0,
+            $this->patternFactory->getRandomPattern(0.5, 0, 0)
+        );
+
+    }
+
     public function tearDown() {
 
         foreach ($this->patterns as $pattern) {
