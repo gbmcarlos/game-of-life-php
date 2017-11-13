@@ -51,6 +51,37 @@ class GameDrawer implements GameDrawerInterface {
 
     }
 
+    public function drawGame(array $grid, int $iterations) : string {
+
+        $frames = [];
+        $delays = [];
+
+        for ($i = 0; $i < $iterations; $i++) {
+
+            $frame = $this->drawPopulation($grid);
+            array_push($frames, $this->getImageBinaryData($frame));
+            array_push($delays, $this->gifDelay);
+
+            $grid = $this->gameOfLife->getNextGeneration($grid);
+
+        }
+
+        $gif = new GIFEncoder(
+            $frames,
+            $delays,
+            0,
+            3,
+            255, 255, 0,
+            [],
+            'bin'
+        );
+
+        $gifFile = $this->saveTemporary($gif->GetAnimation());
+
+        return $gifFile;
+
+    }
+
     public function createCanvas(int $width, int $height) {
 
         $image = imagecreate($width, $height);
