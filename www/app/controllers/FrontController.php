@@ -9,18 +9,45 @@
 namespace App\controllers;
 
 
+use App\services\GameDrawer\GameDrawerInterface;
+use App\services\PatternFactory\PatternFactoryInterface;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class FrontController {
 
     private $twig;
+    private $patternFactory;
+    private $gameDrawer;
 
-    public function __construct(\Twig_Environment $twig) {
+    public function __construct(\Twig_Environment $twig, PatternFactoryInterface $patternFactory, GameDrawerInterface $gameDrawer) {
         $this->twig = $twig;
+        $this->patternFactory = $patternFactory;
+        $this->gameDrawer = $gameDrawer;
     }
 
-    public function helloWorld(Request $request) {
+    public function index(Request $request) {
         return $this->twig->render('index.twig');
+    }
+
+    public function randomPattern(Request $request) {
+
+        $pattern = $this->patternFactory->getRandomPattern(0.5, 38, 38);
+
+        $gifFile = $this->gameDrawer->drawGame($pattern, 100);
+
+        return new BinaryFileResponse($gifFile);
+
+    }
+
+    public function gospersGliderGun(Request $request) {
+
+        $pattern = $this->patternFactory->getPattern('gospers-glider-gun', 38, 38);
+
+        $gifFile = $this->gameDrawer->drawGame($pattern, 100);
+
+        return new BinaryFileResponse($gifFile);
+
     }
 
 }
