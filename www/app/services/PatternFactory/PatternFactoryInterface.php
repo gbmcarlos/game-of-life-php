@@ -6,7 +6,7 @@
  * Time: 12:15 PM
  */
 
-namespace App\services;
+namespace App\services\PatternFactory;
 
 
 interface PatternFactoryInterface {

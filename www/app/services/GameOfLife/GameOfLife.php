@@ -6,9 +6,9 @@
  * Time: 12:36 PM
  */
 
-namespace App\services;
+namespace App\services\GameOfLife;
 
-use App\services\GameOfLifeInterface;
+use App\services\GameOfLife\GameOfLifeInterface;
 
 class GameOfLife implements GameOfLifeInterface {
 

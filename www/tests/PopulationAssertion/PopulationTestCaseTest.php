@@ -107,4 +107,38 @@ class PopulationTestCaseTest extends PopulationTestCase {
 
     }
 
+    public function testPopulationDimensions() {
+
+        $this->assertEquals(
+            true, (new Constraint_PopulationDimensions(
+            2, 2
+        ))->matches(
+            [
+                [1, 0],
+                [1, 0]
+            ]
+        ));
+
+        $this->assertEquals(
+            false, (new Constraint_PopulationDimensions(
+            2, 3
+        ))->matches(
+            [
+                [1, 0],
+                [1, 0]
+            ]
+        ));
+
+        $this->assertEquals(
+            true, (new Constraint_PopulationDimensions(
+            3, 2
+        ))->matches(
+            [
+                [1, 0, 1],
+                [1, 0, 0]
+            ]
+        ));
+
+    }
+
 }

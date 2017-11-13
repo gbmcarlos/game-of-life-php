@@ -6,7 +6,7 @@
  * Time: 12:18 PM
  */
 
-namespace App\services;
+namespace App\services\GameOfLife;
 
 
 interface GameOfLifeInterface {

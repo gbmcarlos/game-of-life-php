@@ -3,7 +3,7 @@
 namespace Tests;
 
 use Tests\PopulationAssertion\PopulationTestCase;
-use App\services\GameOfLife;
+use App\services\GameOfLife\GameOfLife;
 
 /**
  * Created by PhpStorm.
