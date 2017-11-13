@@ -3,6 +3,8 @@
 namespace App\config;
 
 use App\controllers\FrontController;
+use App\services\GameOfLife\GameOfLife;
+use App\services\PatternFactory\PatternFactory;
 use Silex\Application;
 use Silex\Provider\AssetServiceProvider;
 use Silex\Provider\RoutingServiceProvider;
@@ -33,6 +35,15 @@ class Services {
         };
 
         // Services
+
+        $app['PatternFactory'] = function() use ($app) {
+            return new PatternFactory();
+        };
+
+        $app['GameOfLife'] = function() use ($app) {
+            return new GameOfLife();
+        };
+
         // Twig
         $app->register(new TwigServiceProvider(), array(
             'twig.path' => __DIR__.'/../templates',
