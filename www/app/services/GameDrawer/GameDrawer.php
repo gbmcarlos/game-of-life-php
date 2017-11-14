@@ -9,6 +9,7 @@
 namespace App\services\GameDrawer;
 
 use App\services\GameOfLife\GameOfLifeInterface;
+use App\services\GameOfLife\Generation;
 use App\services\GIFEncoder;
 
 class GameDrawer implements GameDrawerInterface {
@@ -41,18 +42,21 @@ class GameDrawer implements GameDrawerInterface {
 
     }
 
-    public function drawGame(array $grid, int $iterations) : string {
+    public function drawGame(Generation $generation, int $iterations) : string {
 
         $frames = [];
         $delays = [];
 
+        $width = $generation->getWidth() * $this->cellWidth;
+        $height = $generation->getHeight() * $this->cellHeight;
+
         for ($i = 0; $i < $iterations; $i++) {
 
-            $frame = $this->drawPopulation($grid);
+            $frame = $this->drawGeneration($generation->getIndividuals(), $width, $height);
             array_push($frames, $this->getImageBinaryData($frame));
             array_push($delays, $this->gifDelay);
 
-            $grid = $this->gameOfLife->getNextGeneration($grid);
+            $generation = $this->gameOfLife->getNextGeneration($generation);
 
         }
 
