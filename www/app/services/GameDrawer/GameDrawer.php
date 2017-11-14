@@ -14,14 +14,14 @@ use App\services\GIFEncoder;
 class GameDrawer implements GameDrawerInterface {
 
     protected $cellWidth;
-    protected $cellheight;
+    protected $cellHeight;
     protected $gifDelay;
     protected $gameOfLife;
     protected $colors = [];
 
     public function __construct($cellWidth, $cellHeight, $gifDelay, GameOfLifeInterface $gameOfLife) {
         $this->cellWidth = $cellWidth;
-        $this->cellheight = $cellHeight;
+        $this->cellHeight = $cellHeight;
         $this->gifDelay = $gifDelay;
         $this->gameOfLife = $gameOfLife;
     }
@@ -98,10 +98,10 @@ class GameDrawer implements GameDrawerInterface {
     public function drawCell($image, $positionX, $positionY) {
 
         $rectangleX1 = $positionX * $this->cellWidth;
-        $rectangleY1 = $positionY * $this->cellheight;
+        $rectangleY1 = $positionY * $this->cellHeight;
 
         $rectangleX2 = $rectangleX1 + $this->cellWidth;
-        $rectangleY2 = $rectangleY1 + $this->cellheight;
+        $rectangleY2 = $rectangleY1 + $this->cellHeight;
         $color = $this->colors['black'];
         imagefilledrectangle(
             $image,
