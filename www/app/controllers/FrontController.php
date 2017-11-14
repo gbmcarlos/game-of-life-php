@@ -10,6 +10,7 @@ namespace App\controllers;
 
 
 use App\services\GameDrawer\GameDrawerInterface;
+use App\services\GameOfLife\Generation;
 use App\services\PatternFactory\PatternFactoryInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,9 +33,12 @@ class FrontController {
 
     public function randomPattern(Request $request) {
 
-        $pattern = $this->patternFactory->getRandomPattern(0.5, 38, 38);
+        $generation = new Generation(
+            38, 38,
+            $pattern = $this->patternFactory->getRandomPattern(0.5, 38, 38)
+        );
 
-        $gifFile = $this->gameDrawer->drawGame($pattern, 100);
+        $gifFile = $this->gameDrawer->drawGame($generation, 100);
 
         return new BinaryFileResponse($gifFile);
 

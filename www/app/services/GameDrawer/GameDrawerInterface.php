@@ -8,11 +8,13 @@
 
 namespace App\services\GameDrawer;
 
+use App\services\GameOfLife\Generation;
+
 interface GameDrawerInterface {
 
-    public function drawPopulation($grid = []);
+    public function drawGeneration(array $individuals, int $width, int $height);
 
-    public function drawGame(array $grid, int $iterations) : string;
+    public function drawGame(Generation $generation, int $iterations) : string;
 
     public function getImageBinaryData($image) : string;
 

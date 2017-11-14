@@ -9,60 +9,54 @@
 namespace App\services\GameDrawer;
 
 use App\services\GameOfLife\GameOfLifeInterface;
+use App\services\GameOfLife\Generation;
 use App\services\GIFEncoder;
 
 class GameDrawer implements GameDrawerInterface {
 
     protected $cellWidth;
-    protected $cellheight;
+    protected $cellHeight;
     protected $gifDelay;
     protected $gameOfLife;
     protected $colors = [];
 
     public function __construct($cellWidth, $cellHeight, $gifDelay, GameOfLifeInterface $gameOfLife) {
         $this->cellWidth = $cellWidth;
-        $this->cellheight = $cellHeight;
+        $this->cellHeight = $cellHeight;
         $this->gifDelay = $gifDelay;
         $this->gameOfLife = $gameOfLife;
     }
 
-    public function drawPopulation($grid = []) {
-
-        $numberCells = count($grid[0]);
-        $numberLines = count($grid);
-
-        // canvas dimensions
-        $width = $numberCells * $this->cellWidth;
-        $height = $numberLines * $this->cellheight;
+    public function drawGeneration(array $individuals, int $width, int $height) {
 
         $image = $this->createCanvas($width, $height);
 
-        for ($y = 0; $y < $numberLines; $y++) {
-            for ($x = 0; $x < $numberCells; $x++) {
-
-                if ($grid[$y][$x]) {
-                    $image = $this->drawCell($image, $x, $y);
-                }
-
-            }
+        foreach ($individuals as $individual) {
+            $this->drawCell(
+                $image,
+                $individual[1],
+                $individual[0]);
         }
 
         return $image;
 
     }
 
-    public function drawGame(array $grid, int $iterations) : string {
+    public function drawGame(Generation $generation, int $iterations) : string {
 
         $frames = [];
         $delays = [];
 
+        $width = $generation->getWidth() * $this->cellWidth;
+        $height = $generation->getHeight() * $this->cellHeight;
+
         for ($i = 0; $i < $iterations; $i++) {
 
-            $frame = $this->drawPopulation($grid);
+            $frame = $this->drawGeneration($generation->getIndividuals(), $width, $height);
             array_push($frames, $this->getImageBinaryData($frame));
             array_push($delays, $this->gifDelay);
 
-            $grid = $this->gameOfLife->getNextGeneration($grid);
+            $generation = $this->gameOfLife->getNextGeneration($generation);
 
         }
 
@@ -98,10 +92,10 @@ class GameDrawer implements GameDrawerInterface {
     public function drawCell($image, $positionX, $positionY) {
 
         $rectangleX1 = $positionX * $this->cellWidth;
-        $rectangleY1 = $positionY * $this->cellheight;
+        $rectangleY1 = $positionY * $this->cellHeight;
 
         $rectangleX2 = $rectangleX1 + $this->cellWidth;
-        $rectangleY2 = $rectangleY1 + $this->cellheight;
+        $rectangleY2 = $rectangleY1 + $this->cellHeight;
         $color = $this->colors['black'];
         imagefilledrectangle(
             $image,
