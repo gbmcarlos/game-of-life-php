@@ -12,9 +12,14 @@ use App\services\GameOfLife\GameOfLifeInterface;
 
 class GameOfLife implements GameOfLifeInterface {
 
-    public function getNextGeneration($population = []) : array {
+    public function getNextGeneration(Generation $generation) : Generation {
 
-        $result = [];
+        $nextGeneration = new Generation(
+            $generation->getWidth(),
+            $generation->getHeight()
+        );
+
+        $population = $generation->getPopulation();
 
         for ($i = 0; $i < count($population); $i++) {
 
@@ -27,7 +32,9 @@ class GameOfLife implements GameOfLifeInterface {
 
                     $nextCell = $this->getCellNextGeneration($population[$i][$j], $neighbours);
 
-                    $result[$i][$j] = $nextCell;
+                    if ($nextCell) {
+                        $nextGeneration->addIndividual($i, $j);
+                    }
 
                 }
             } else {
@@ -39,7 +46,7 @@ class GameOfLife implements GameOfLifeInterface {
             }
         }
 
-        return $result;
+        return $nextGeneration;
 
     }
 

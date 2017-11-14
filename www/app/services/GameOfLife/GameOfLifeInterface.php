@@ -11,6 +11,6 @@ namespace App\services\GameOfLife;
 
 interface GameOfLifeInterface {
 
-    public function getNextGeneration($population = []) : array;
+    public function getNextGeneration(Generation $population) : Generation;
 
 }
