@@ -26,25 +26,15 @@ class GameDrawer implements GameDrawerInterface {
         $this->gameOfLife = $gameOfLife;
     }
 
-    public function drawPopulation($grid = []) {
-
-        $numberCells = count($grid[0]);
-        $numberLines = count($grid);
-
-        // canvas dimensions
-        $width = $numberCells * $this->cellWidth;
-        $height = $numberLines * $this->cellheight;
+    public function drawGeneration(array $individuals, int $width, int $height) {
 
         $image = $this->createCanvas($width, $height);
 
-        for ($y = 0; $y < $numberLines; $y++) {
-            for ($x = 0; $x < $numberCells; $x++) {
-
-                if ($grid[$y][$x]) {
-                    $image = $this->drawCell($image, $x, $y);
-                }
-
-            }
+        foreach ($individuals as $individual) {
+            $this->drawCell(
+                $image,
+                $individual[1],
+                $individual[0]);
         }
 
         return $image;
