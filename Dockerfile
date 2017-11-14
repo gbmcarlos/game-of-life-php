@@ -25,21 +25,17 @@ RUN echo 'xdebug.remote_handler=dbgp' >> /usr/local/etc/php/conf.d/xdebug.ini
 RUN echo 'xdebug.profiler_enable=0' >> /usr/local/etc/php/conf.d/xdebug.ini
 RUN echo 'xdebug.profiler_output_dir="/var/www/html"' >> /usr/local/etc/php/conf.d/xdebug.ini
 
-# Install composer
-RUN curl -sS https://getcomposer.org/installer | \
-    php -- --install-dir=/usr/bin/ --filename=composer
-
-# Copy composer json and lock
-COPY ./www/composer.json ./www/composer.* /var/www/html/www/
+# Copy composer json, lock and phar
+COPY ./www/composer.* /var/www/html/www/
 
 # Now install the dependences
-RUN composer install --no-scripts --no-autoloader --working-dir=/var/www/html/www
+RUN php /var/www/html/www/composer.phar install --no-scripts --no-autoloader --working-dir=/var/www/html/www
 
 # Now copy de application's source code
 COPY ./www /var/www/html
 
 # And now dump the autoload
-RUN composer dump-autoload --optimize
+RUN php /var/www/html/www/composer.phar dump-autoload --optimize
 
 WORKDIR /var/www/html
 

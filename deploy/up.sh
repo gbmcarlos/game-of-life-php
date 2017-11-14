@@ -8,7 +8,7 @@ echo ">>>> Building docker image"
 docker build -t game_of_life:latest $PWD/..
 
 echo ">>>> Installing dependencies"
-composer install --prefer-dist --no-interaction --ignore-platform-reqs --working-dir=$PWD/../www
+php $PWD/../www/composer.phar install --prefer-dist --no-interaction --ignore-platform-reqs --working-dir=$PWD/../www
 
 echo ">>>> Removing old container"
 docker rm -f game_of_life || true
