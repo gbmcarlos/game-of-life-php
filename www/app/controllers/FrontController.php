@@ -46,9 +46,11 @@ class FrontController {
 
     public function gospersGliderGun(Request $request) {
 
-        $pattern = $this->patternFactory->getPattern('gospers-glider-gun', 38, 38);
-
-        $gifFile = $this->gameDrawer->drawGame($pattern, 100);
+        $generation = new Generation(
+            38, 38,
+            $pattern = $this->patternFactory->getPattern('gospers-glider-gun', 38, 38)
+        );
+        $gifFile = $this->gameDrawer->drawGame($generation, 100);
 
         return new BinaryFileResponse($gifFile);
 
