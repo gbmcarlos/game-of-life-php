@@ -26,18 +26,20 @@ RUN echo 'xdebug.profiler_enable=0' >> /usr/local/etc/php/conf.d/xdebug.ini
 RUN echo 'xdebug.profiler_output_dir="/var/www/html"' >> /usr/local/etc/php/conf.d/xdebug.ini
 
 # Copy composer json, lock and phar
-COPY ./www/composer.* /var/www/html/www/
+COPY ./www/composer.* /var/www/html/
 
 # Now install the dependences
-RUN php /var/www/html/www/composer.phar install --no-scripts --no-autoloader --working-dir=/var/www/html/www
+RUN php /var/www/html/composer.phar install --no-scripts --no-autoloader --working-dir=/var/www/html
 
 # Now copy de application's source code
 COPY ./www /var/www/html
 
 # And now dump the autoload
-RUN php /var/www/html/www/composer.phar dump-autoload --optimize
+RUN php /var/www/html/composer.phar dump-autoload --optimize  --working-dir=/var/www/html
 
 WORKDIR /var/www/html
+
+RUN chown -R www-data /var/www/html
 
 # Configure Apahce
 ADD ./deploy/apache/main.conf /etc/apache2/sites-available/main.conf
