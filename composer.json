@@ -1,5 +1,7 @@
 {
+    "name": "gbmcarlos/game-of-life-php",
     "require": {
+        "php": "^7.2",
         "silex/silex": "2.2.0",
         "twig/twig": "2.4.4",
         "symfony/twig-bridge": "3.3.10",
@@ -10,8 +12,8 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "app/",
-            "Tests\\": "tests/"
+            "App\\": "src/app/",
+            "Tests\\": "src/tests/"
         }
     }
 }

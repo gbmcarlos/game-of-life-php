@@ -1,58 +1,119 @@
-FROM php:7.1-apache
+FROM php:7.2-apache-stretch
 
-# Install system dependencies
-RUN    apt-get update \
-    && apt-get -yq install \
-        curl \
-        php5-curl \
-        libapache2-mod-macro \
-        git \
-        libpng12-dev libjpeg-dev \
-    && rm -rf /var/lib/apt/lists/*
+LABEL maintainer="gbmcarlos@ekar.ae"
 
-RUN docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr \
-	&& docker-php-ext-install gd zip
+### System dependencies
+#### git and zip are necessary to use composer
+RUN     set -ex \
+    &&  apt-get update \
+    &&  apt-get upgrade -y \
+    &&  apt-get -yq install \
+            autoconf \
+            git \
+            zip \
+            libjpeg-dev \
+            libpng-dev \
+    &&  rm -rf /var/lib/apt/lists/*
 
-# Install and configure XDebug
-RUN pecl install xdebug-2.5.5 && docker-php-ext-enable xdebug
+### PHP extensions
+#### Install both opcache and xdebug regardles of the environment (regardless of the env vars), they will be enabled or disabled later
+RUN     set -ex \
+    &&  pecl install \
+            xdebug-stable \
+    &&  docker-php-ext-install \
+            gd \
+            opcache \
+    &&  docker-php-ext-enable \
+            xdebug \
+    &&  docker-php-ext-configure \
+            gd --with-jpeg-dir=/usr
 
-RUN echo 'xdebug.remote_port=9000' >> /usr/local/etc/php/conf.d/xdebug.ini
-RUN echo 'xdebug.remote_host=10.254.254.254' >> /usr/local/etc/php/conf.d/xdebug.ini
-RUN echo 'xdebug.remote_enable=on' >> /usr/local/etc/php/conf.d/xdebug.ini
-RUN echo 'xdebug.remote_autostart=on' >> /usr/local/etc/php/conf.d/xdebug.ini
-RUN echo 'xdebug.remote_connect_back=off' >> /usr/local/etc/php/conf.d/xdebug.ini
-RUN echo 'xdebug.remote_handler=dbgp' >> /usr/local/etc/php/conf.d/xdebug.ini
-RUN echo 'xdebug.profiler_enable=0' >> /usr/local/etc/php/conf.d/xdebug.ini
-RUN echo 'xdebug.profiler_output_dir="/var/www/html"' >> /usr/local/etc/php/conf.d/xdebug.ini
+### Configure PHP
+#### https://secure.php.net/manual/en/opcache.installation.php#opcache.installation.recommended
+#### If OPTIMIZE_PHP set the error reporting settings and the setting OPCache
+#### If not OPTIMIZE_PHP, set the error reporting settings and delete the .ini config file for OPCache that was created by the docker-php-ext-install script
+ARG OPTIMIZE_PHP=false
+RUN if \
+        [ $OPTIMIZE_PHP = "true" ] ; \
+    then \
+            echo '\
+display_errors=Off\n\
+display_startup_errors=Off\n\
+error_reporting=E_ALL\n\
+log_errors=On' >> /usr/local/etc/php/php.ini \
+        &&  echo '\
+opcache.memory_consumption=Off\n\
+opcache.interned_strings_buffer=Off\n\
+opcache.max_accelerated_files=Off\n\
+opcache.revalidate_freq=Off\n\
+opcache.fast_shutdown=Off\n\
+opcache.enable_cli=On' >> /usr/local/etc/php/conf.d/opcache.ini; \
+    else \
+            echo '\
+display_errors=STDOUT\n\
+display_startup_errors=On\n\
+error_reporting=E_ALL\n\
+log_errors=On' >> /usr/local/etc/php/php.ini \
+        &&  rm /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini; \
+    fi
 
-# Copy composer json, lock and phar
-COPY ./www/composer.* /var/www/html/www/
+### Composer install
+COPY ./composer.* /var/www/
+RUN php /var/www/composer.phar install -v --working-dir=/var/www --no-autoloader --no-suggest --no-dev
 
-# Now install the dependences
-RUN php /var/www/html/www/composer.phar install --no-scripts --no-autoloader --working-dir=/var/www/html/www
+### Apache2 configuration
+RUN a2enmod rewrite
+COPY deploy/scripts/000-default.conf /etc/apache2/sites-available/000-default.conf
+ARG BASIC_AUTH_ENABLED=false
+ENV BASIC_AUTH_ENABLED $BASIC_AUTH_ENABLED
+ARG BASIC_AUTH_USER=''
+ARG BASIC_AUTH_PASSWORD=''
+RUN if \
+        [ $BASIC_AUTH_ENABLED = "true" ] ; \
+    then \
+        htpasswd -cb -B -C 10 /etc/apache2/.htpasswd $BASIC_AUTH_USER $BASIC_AUTH_PASSWORD; \
+    fi
 
-# Now copy de application's source code
-COPY ./www /var/www/html
+### Source code
+COPY ./src /var/www/src
 
-# And now dump the autoload
-RUN php /var/www/html/www/composer.phar dump-autoload --optimize
+WORKDIR /var/www
 
-WORKDIR /var/www/html
+### Composer optimizie
+ARG OPTIMIZE_COMPOSER=false
+RUN if \
+        [ $OPTIMIZE_COMPOSER = "true" ] ; \
+    then \
+        php /var/www/composer.phar dump-autoload -v --working-dir=/var/www --optimize --classmap-authoritative; \
+    else \
+        php /var/www/composer.phar dump-autoload -v --working-dir=/var/www; \
+    fi
 
-# Configure Apahce
-ADD ./deploy/apache/main.conf /etc/apache2/sites-available/main.conf
+### XDebug support
+#### If XDEBUG_ENABLED set the settings for Xdebug
+#### If not XDEBUG_ENABLED, delete the .ini config file that was created by the docker-php-ext-enable script
+ARG XDEBUG_ENABLED=false
+ARG XDEBUG_REMOTE_HOST
+ARG XDEBUG_REMOTE_PORT
+ARG XDEBUG_IDE_KEY
+RUN if \
+        [ $XDEBUG_ENABLED = "true" ] ; \
+    then \
+        echo '\
+xdebug.remote_host='$XDEBUG_REMOTE_HOST'\n\
+xdebug.remote_port='$XDEBUG_REMOTE_PORT'\n\
+xdebug.idekey='$XDEBUG_IDE_KEY'\n\
+xdebug.remote_enable=1\n\
+xdebug.remote_autostart=1\n\
+xdebug.remote_connect_back=off\n\
+xdebug.max_nesting_level=1500' >> /usr/local/etc/php/conf.d/xdebug.ini; \
+    else \
+        rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini; \
+    fi
 
-## Enable rewrite module
-RUN a2enmod rewrite macro
+# Expose 80 by default
+EXPOSE 80
 
-## Enable the site
-RUN a2dissite 000-default && a2ensite main
+WORKDIR /var/www/src
 
-# Don't listen by default port 80 (see comment in main.conf)
-RUN sed -i 's/^Listen 80/#Listen80/' /etc/apache2/ports.conf
-
-# Run apache
-ADD ./deploy/apache/run.sh  /run.sh
-RUN chmod 777 /run.sh
-USER www-data
-CMD ["/run.sh"]
+CMD ["apache2ctl", "-D", "FOREGROUND"]

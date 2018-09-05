@@ -6,7 +6,7 @@
  * Time: 5:07 AM
  */
 
-require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 
 // Create app
 $app = new Silex\Application();
