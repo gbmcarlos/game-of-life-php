@@ -47,7 +47,7 @@ These environment variables are given a default value in the `up.sh` and `local.
 Example:
 `HOST_PORT=8000 BASIC_AUTH_ENABLED=true BASIC_AUTH_USER=user BASIC_AUTH_PASSWORD=secure_password XDEBUG_ENABLED=true ./deploy/local.up.sh`
 You can also run the container yourself and override the container's command to run a different process instead of the normal application and web server:
-`docker run --name background-process --rm -v $PWD/src:/var/www/src --rm -w /var/www -e XDEBUG_ENABLED=true -e PROJECT_NAME=skellington -e OPTIMIZE_ASSETS=false skellington:latest /bin/sh -c "/var/www/configure.sh && php -i"`
+`docker run --name background-process --rm -v $PWD/src:/var/www/src --rm -e XDEBUG_ENABLED=true -e PROJECT_NAME=skellington -e OPTIMIZE_ASSETS=false skellington:latest /bin/sh -c "./configure.sh && php -i"`
 
 ## Running commands
 Since the application runs inside the container, all commands that affect the application have to be executed there. To do so, run `docker exec -it life /bin/sh -c "{command}"`.
@@ -60,7 +60,7 @@ docker cp life:/var/www/composer.lock .
 ```
 
 ## Watch assets
-To watch the assets (i.e. to see the compiled changes instantly reflect after every change) run `docker exec -it -w /var/www life /bin/sh -c "node_modules/webpack/bin/webpack.js --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js --watch"`
+To watch the assets (i.e. to see the compiled changes instantly reflect after every change) run `docker exec -it life /bin/sh -c "node_modules/webpack/bin/webpack.js --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js --watch"`
 
 ## Xdebug support
 Even though the project runs inside a Docker container, it still provides support for debugging with Xdebug. By telling Xdebug the remote location of your IDE and configuring this one to listen to certain port, they can communicate with one another.

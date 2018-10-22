@@ -4,7 +4,7 @@ set -ex
 
 cd "$(dirname "$0")"
 
-export HOST_PORT=${HOST_PORT:=81}
+export HOST_PORT=${HOST_PORT:=86}
 export PROJECT_NAME=${PROJECT_NAME:=$(basename $(dirname $PWD))}
 export OPTIMIZE_PHP=${OPTIMIZE_PHP:=false}
 export OPTIMIZE_COMPOSER=${OPTIMIZE_COMPOSER:=false}
@@ -39,6 +39,6 @@ docker run \
     -v $PWD/../src:/var/www/src \
     -v $PWD/../vendor:/var/www/vendor \
     ${PROJECT_NAME}:latest \
-    /bin/sh -c "cd /var/www && php composer.phar install -v --working-dir=/var/www --no-suggest --no-dev && /var/www/entrypoint.sh"
+    /bin/sh -c "composer install -v --no-suggest --no-dev && ./entrypoint.sh"
 
 docker logs -f ${PROJECT_NAME}

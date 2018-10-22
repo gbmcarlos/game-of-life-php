@@ -1,17 +1,18 @@
 {% extends 'layout.twig' %}
 
 {% block content %}
-    <div class="row align-items-center">
-        <div class="offset-md-4 col-md-4 col-sm-12 col-xs-12">
-            <div class="card">
-                <div class="card-body">
-                    <button id="randomPatternButton" class="btn btn-primary btn-block" data-href="{{ url('random-pattern') }}">Random pattern</button>
-                    <button id="gospersGliderGunButton" class="btn btn-primary btn-block" data-href="{{ url('gospers-glider-gun') }}">Gosper's Glider Gun</button>
-                    <label id="loadingLabel" style="display: none">Generating animation...</label>
-                </div>
+    <section class="hero is-fullheight">
+
+        <div class="hero-body">
+            <div class="container has-text-centered content">
+                <button id="randomPatternButton" class="button" data-href="{{ url('random-pattern') }}">Random pattern</button>
+                <button id="gospersGliderGunButton" class="button" data-href="{{ url('gospers-glider-gun') }}">Gosper's Glider Gun</button>
+                <br>
+                <label id="loadingLabel" style="display: none">Generating animation...</label>
             </div>
         </div>
-    </div>
+
+    </section>
 {% endblock %}
 
 {% block footerAssets %}

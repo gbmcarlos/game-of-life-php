@@ -25,6 +25,7 @@ RUN     set -ex \
     &&  docker-php-ext-install \
             pdo_mysql \
             opcache \
+            gd \
     &&  docker-php-ext-configure \
             gd --with-jpeg-dir=/usr
 
@@ -32,17 +33,21 @@ WORKDIR /var/www
 
 ## SCRIPTS
 ### Make sure all scripts have execution permissions
-COPY ./deploy/scripts/* /var/www/
-RUN chmod +x /var/www/*.sh
+COPY ./deploy/scripts/* ./
+RUN chmod +x ./*.sh
 
 ## COMPOSER
+### Install composer by copying the binary from composer's official image (compressed multi-stage)
 ### So far, we are just going to install the dependencies, so no need to dump the autoloader yet
-RUN /var/www/install-composer.sh --quiet
-COPY ./composer.* /var/www/
-RUN php /var/www/composer.phar install -v --working-dir=/var/www --no-autoloader --no-suggest --no-dev
+### At the end, remove the root's composer folder that was used to install and use prestissimo
+COPY --from=composer:1.7.2 /usr/bin/composer /usr/bin/composer
+COPY ./composer.* ./
+RUN     composer global require hirak/prestissimo:0.3.8 \
+    &&  composer install -v --no-autoloader --no-suggest --no-dev \
+    &&  rm -rf /root/.composer
 
 ## SOURCE CODE
-COPY ./src /var/www/src
+COPY ./src ./src
 
 ## PERMISSIONS
 ### create www user and group for nginx
@@ -54,7 +59,7 @@ RUN     adduser -D -g 'www' www \
 ## COMPOSER AUTOLOADER
 ### Now that we've copied the source code, dump the autoloader
 ### By default, optimize the autoloader
-RUN php /var/www/composer.phar dump-autoload -v --optimize --classmap-authoritative;
+RUN composer dump-autoload -v --optimize --classmap-authoritative;
 
 ## CONFIGURATION FILES
 ### php, php-fpm, nginx and supervisor config files
@@ -65,4 +70,4 @@ COPY ./deploy/config/supervisor.conf /etc/supervisor.conf
 
 EXPOSE 80
 
-CMD ["/var/www/entrypoint.sh"]
+CMD ["./entrypoint.sh"]
