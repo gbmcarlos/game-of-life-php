@@ -8,7 +8,6 @@
 
 namespace App\controllers;
 
-
 use App\services\GameDrawer\GameDrawerInterface;
 use App\services\GameOfLife\Generation;
 use App\services\PatternFactory\PatternFactoryInterface;
@@ -28,7 +27,7 @@ class FrontController {
     }
 
     public function index(Request $request) {
-        return $this->twig->render('index.twig');
+        return $this->twig->render('home.twig');
     }
 
     public function randomPattern(Request $request) {

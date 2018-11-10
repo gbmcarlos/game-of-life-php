@@ -1,0 +1,27 @@
+{% extends 'layout/html.twig' %}
+{% block body %}
+    <body class="has-navbar-fixed-top">
+
+        {% include 'layout/header.twig' %}
+
+        <section class="section main-section content">
+            <div class="container-fluid">
+                <div class="columns">
+
+                    <div class="column is-6 is-offset-3">
+                        {% block content %}{% endblock %}
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        {% include 'layout/footer.twig' %}
+
+        <link rel="stylesheet" href="/assets/styles/page.css">
+        {#<script type="application/javascript" src="/assets/js/navbar-burger.js"></script>#}
+
+        {% block footerAssets %}{% endblock %}
+    </body>
+
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'layout/page.twig' %}
+
+{% block content %}
+    <p>The Game of Life, also known simply as Life, is a cellular automaton devised by the British mathematician John Horton Conway in 1970.</p>
+    <p>The game is a zero-player game, meaning that its evolution is determined by its initial state, requiring no further input. One interacts with the Game of Life by creating an initial configuration and observing how it evolves, or, for advanced players, by creating patterns with particular properties.</p>
+    <button id="randomPatternButton" class="button" data-href="{{ url('random-pattern') }}">Random pattern</button>
+    <button id="gospersGliderGunButton" class="button" data-href="{{ url('gospers-glider-gun') }}">Gosper's Glider Gun</button>
+    <br><label id="loadingLabel" style="display: none">Generating animation...</label>
+{% endblock %}
+
+{% block footerAssets %}
+    {{ parent() }}
+    <script type="application/javascript" src="{{ asset('assets/js/IndexPageController.js') }}"></script>
+{% endblock %}
