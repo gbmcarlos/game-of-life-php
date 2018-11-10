@@ -4,7 +4,7 @@ set -ex
 
 cd "$(dirname "$0")"
 
-export HOST_PORT=${HOST_PORT:=81}
+export HOST_PORT=${HOST_PORT:=80}
 export PROJECT_NAME=${PROJECT_NAME:=$(basename $(dirname $PWD))}
 export OPTIMIZE_PHP=${OPTIMIZE_PHP:=true}
 export OPTIMIZE_COMPOSER=${OPTIMIZE_COMPOSER:=true}
@@ -26,6 +26,7 @@ docker run \
     --name ${PROJECT_NAME} \
     -d \
     -p ${HOST_PORT}:80 \
+    -e HOST_PORT \
     -e PROJECT_NAME \
     -e OPTIMIZE_PHP \
     -e OPTIMIZE_COMPOSER \

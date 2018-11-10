@@ -4,7 +4,7 @@ set -ex
 
 cd "$(dirname "$0")"
 
-export HOST_PORT=${HOST_PORT:=86}
+export HOST_PORT=${HOST_PORT:=80}
 export PROJECT_NAME=${PROJECT_NAME:=$(basename $(dirname $PWD))}
 export OPTIMIZE_PHP=${OPTIMIZE_PHP:=false}
 export OPTIMIZE_COMPOSER=${OPTIMIZE_COMPOSER:=false}
@@ -26,6 +26,8 @@ docker run \
     --name ${PROJECT_NAME} \
     -d \
     -p ${HOST_PORT}:80 \
+    -e APP_DEBUG=true \
+    -e HOST_PORT \
     -e PROJECT_NAME \
     -e OPTIMIZE_PHP \
     -e OPTIMIZE_COMPOSER \
@@ -39,6 +41,6 @@ docker run \
     -v $PWD/../src:/var/www/src \
     -v $PWD/../vendor:/var/www/vendor \
     ${PROJECT_NAME}:latest \
-    /bin/sh -c "composer install -v --no-suggest --no-dev && ./entrypoint.sh"
+    /bin/sh -c "composer install -v --no-suggest --no-dev --no-interaction --no-ansi && ./entrypoint.sh"
 
 docker logs -f ${PROJECT_NAME}

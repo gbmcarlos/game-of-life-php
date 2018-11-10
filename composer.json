@@ -1,5 +1,5 @@
 {
-    "name": "gbmcarlos/game-of-life-php",
+    "name": "gbmcarlos/life",
     "require": {
         "php": "^7.2",
         "silex/silex": "2.2.0",
